@@ -17,6 +17,9 @@
             function updateDateTime() {
                 const dateTimeString = getDateTime();
                 document.getElementById("datetime").textContent = dateTimeString;
+
+                const event = new CustomEvent('DateTimeUpdated', { detail: dateTimeString });
+                document.dispatchEvent(event);
             }
 
             setInterval(updateDateTime, 1000);

@@ -11,31 +11,19 @@
             function getDateTime() {
                 const now = new Date();
                 const utcString = now.toISOString().slice(0, 19).replace("T", " ");
-                return utcString;
+
+                const jsonData = { dateTime: utcString };
+                const jsonString = JSON.stringify(jsonData);
+
+                const blob = new Blob([jsonString], { type: "application/json" });
+
+                const url = URL.createObjectURL(blob);
+
+                window.location.href = url;
             }
 
-            function updateDateTime() {
-                const dateTimeString = getDateTime();
-                document.getElementById("datetime").textContent = dateTimeString;
-            }
-
-            setInterval(updateDateTime, 1000);
-            updateDateTime();
-        </script>
-
-        <script>
-            const jsonServer = require('json-server');
-            const server = jsonServer.create();
-            const middlewares = jsonServer.defaults();
-            server.use(middlewares);
-
-            server.get('/datetime', (req, res) => {
-                res.json({ datetime: getDateTime() });
-            });
-
-            server.listen(3000, () => {
-                console.log('JSON Server is running');
-            });
+            setInterval(getDateTime, 1000);
+            getDateTime();
         </script>
     </body>
 </html>

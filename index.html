@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html>
+    <header>
+        <meta charset="UTF-8">
+        <title>Date and Time UTC</title>
+    </header>
+    <body>
+        <div id="datetime"></div>
+
+        <script>
+            function getDateTime() {
+                const now = new Date();
+                const utcString = now.toISOString().slice(0, 19).replace("T", " ");
+                return utcString;
+            }
+
+            function updateDateTime() {
+                const dateTimeString = getDateTime();
+                document.getElementById("datetime").textContent = dateTimeString;
+            }
+
+            setInterval(updateDateTime, 1000);
+            updateDateTime();
+
+            window.getDateTime = getDateTime;
+        </script>
+    </body>
+</html>

@@ -5,25 +5,43 @@
         <title>Date and Time UTC</title>
     </header>
     <body>
-        <div id="datetime"></div>
+        <pre id="json-data"></pre>
 
         <script>
             function getDateTime() {
                 const now = new Date();
                 const utcString = now.toISOString().slice(0, 19).replace("T", " ");
-
-                const jsonData = { dateTime: utcString };
-                const jsonString = JSON.stringify(jsonData);
-
-                const blob = new Blob([jsonString], { type: "application/json" });
-
-                const url = URL.createObjectURL(blob);
-
-                window.location.href = url;
+                return utcString;
             }
 
-            setInterval(getDateTime, 1000);
-            getDateTime();
+            async function updateDateTime() {
+                const dateTimeString = getDateTime();
+                const jsonData = { dateTime: dateTimeString };
+                const jsonString = JSON.stringify(jsonData, null, 2);
+                const url = "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO_NAME/main/date-time.json";
+
+                const response = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': 'Bearer YOUR_GITHUB_PERSONAL_ACCESS_TOKEN',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: 'Update date-time.json',
+                        content: btoa(jsonString),
+                        sha: 'YOUR_CURRENT_FILE_SHA',
+                    }),
+                });
+
+                if (response.ok) {
+                    document.getElementById("json-data").textContent = jsonString;
+                }
+            }
+
+            setInterval(updateDateTime, 1000);
+            updateDateTime();
+
+            window.getDateTime = getDateTime;
         </script>
     </body>
 </html>

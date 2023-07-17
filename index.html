@@ -17,15 +17,25 @@
             function updateDateTime() {
                 const dateTimeString = getDateTime();
                 document.getElementById("datetime").textContent = dateTimeString;
-
-                const event = new CustomEvent('DateTimeUpdated', { detail: dateTimeString });
-                document.dispatchEvent(event);
             }
 
             setInterval(updateDateTime, 1000);
             updateDateTime();
+        </script>
 
-            window.getDateTime = getDateTime;
+        <script>
+            const jsonServer = require('json-server');
+            const server = jsonServer.create();
+            const middlewares = jsonServer.defaults();
+            server.use(middlewares);
+
+            server.get('/datetime', (req, res) => {
+                res.json({ datetime: getDateTime() });
+            });
+
+            server.listen(3000, () => {
+                console.log('JSON Server is running');
+            });
         </script>
     </body>
 </html>
